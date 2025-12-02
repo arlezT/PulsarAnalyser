@@ -20,6 +20,7 @@ public:
     // chWidth: channel width in Hz
     // samplingT: sampling time interval
 	TimeFrequency(
+        std::vector<float> data,
         unsigned numChannels, 
         size_t numSpectra, 
         unsigned startFq, 
@@ -27,9 +28,19 @@ public:
         float chWidth,
         double samplingT);
 
-    // Functions to retrieve member attributes, such as number of channels and number of spectra per channel.
+    // Accessors for the underlying data and metadata.
+    // data(): returns a reference to the internal data buffer
+    // updateData(): replaces the stored time-frequency data
+    // getNumChannels() / getNumSpectra(): metadata describing the layout
+    // getChannelPtr(): returns a pointer to the first element of a given channel
+    const std::vector<float>& data() const { return data_; }
+    std::vector<float>& data() { return data_; }
+    void updateData(const std::vector<float>& newData) { data_ = newData; }
     unsigned getNumChannels() const { return numChannels_; }
     size_t getNumSpectra() const { return numSpectra_; }
+    float* getChannelPtr(unsigned ch) {return &data_[ch * numSpectra_];}
+    const float* getChannelPtr(unsigned ch) const {return &data_[ch * numSpectra_];}
+
 
     // Computes median of a channel's data.
     // If cache is valid, returns cached value. Otherwise, computes and updates cache.
@@ -45,6 +56,7 @@ public:
     void setCacheValid(bool valid); //Sets whether cached medians are used in computeChannelMedian
 
 private: 
+    std::vector<float> data_; // Data is stored in the class
     std::vector<float> cachedMedians_; //Stores cached medians per channel
     bool cacheValid_;
 
