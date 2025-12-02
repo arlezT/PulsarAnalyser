@@ -19,50 +19,16 @@ using namespace std;
 #define END_FREQUENCY 2000
 #define SAMPLING_TIME 50e-6
 
-//struct RFIModule 
-//{
-//    TimeFrequency process(const TimeFrequency& input)
-//    {
-//        TimeFrequency tf = input;
-//        // Initialise variables for the channel median and number of channels replaced 
-//        unsigned channels_flagged = 0;
-//
-//        // Determine number of available CPU cores for parallel processing
-//        // and calculate how many channels each thread should process
-//        unsigned numThreads = thread::hardware_concurrency();
-//        if (numThreads == 0) numThreads = 1;
-//
-//        vector<thread> threads;
-//        threads.reserve(numThreads);
-//        size_t chPerThread = tf.getNumChannels() / numThreads;
-//
-//        // Worker lambda: processes a batch of channels
-//        // Computes median and standard deviation per channel
-//        // Cleans outliers based on an adjusted threshold
-//        // Previous median per channel is cached for speed and assumed statistically valid on large datasets
-//        // Standard deviation is recomputed for each chunk because it is more sensitive to variation
-//
-//        auto worker = [&](unsigned startCh, unsigned endCh)
-//            {
-//                for (unsigned ch = startCh; ch < endCh; ++ch)
-//                {
-//                    float median;
-//                    double stdDev;
-//                    float* chP = tf.getChannelPtr(ch);
-//                    tf.computeChannelMedian(chP, tf.getNumSpectra(), median, ch);
-//                    tf.computeStdDev(chP, tf.getNumSpectra(), median, stdDev);
-//
-//                    float adjustedThreshold = THRESHOLD * stdDev + median;
-//                    unsigned flag = tf.cleanData(chP, tf.getNumSpectra(), median, adjustedThreshold);
-//                    if (flag > 0) channels_flagged++;
-//                }
-//            };
+// RFIM that takes TimeFrequency objects and cleans the signal ahead of dedispersion. 
 struct RFIModule
 {
     void process(TimeFrequency& tf)
     {
+        // Initialise variable to store the number of channels replaced 
         unsigned channels_flagged = 0;
 
+        // Determine number of available CPU cores for parallel processing
+        // and calculate how many channels each thread should process}
         unsigned numThreads = thread::hardware_concurrency();
         if (numThreads == 0) numThreads = 1;
 
@@ -70,6 +36,11 @@ struct RFIModule
         threads.reserve(numThreads);
         size_t chPerThread = tf.getNumChannels() / numThreads;
 
+        // Worker lambda: processes a batch of channels
+        // Computes median and standard deviation per channel
+        // Cleans outliers based on an adjusted threshold
+        // Previous median per channel is cached for speed and assumed statistically valid on large datasets
+        // Standard deviation is recomputed for each chunk because it is more sensitive to variation
         auto worker = [&](unsigned startCh, unsigned endCh)
             {
                 for (unsigned ch = startCh; ch < endCh; ++ch)

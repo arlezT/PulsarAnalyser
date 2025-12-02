@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// Float constructor
 TimeFrequency::TimeFrequency(
     vector<float> spectra,
     unsigned numChannels,
@@ -27,6 +28,47 @@ TimeFrequency::TimeFrequency(
     cachedMedians_.resize(numChannels_, 0.0f);
 } // Resizes cachedMedians_ vector to hold one median per channel
 
+// 8-bit constructor
+TimeFrequency::TimeFrequency(
+    const std::vector<uint8_t>& data8,
+    unsigned numChannels,
+    size_t numSpectra,
+    unsigned startFq,
+    unsigned endFq,
+    float chWidth,
+    double samplingT)
+    : numChannels_(numChannels),
+    numSpectra_(numSpectra),
+    startFq_(startFq),
+    endFq_(endFq),
+    chWidth_(chWidth),
+    samplingT_(samplingT),
+    cacheValid_(false)
+{
+    loadFromIntegerData(data8);
+    cachedMedians_.resize(numChannels_, 0.0f);
+}
+
+// 16-bit constructor
+TimeFrequency::TimeFrequency(
+    const std::vector<uint16_t>& data16,
+    unsigned numChannels,
+    size_t numSpectra,
+    unsigned startFq,
+    unsigned endFq,
+    float chWidth,
+    double samplingT)
+    : numChannels_(numChannels),
+    numSpectra_(numSpectra),
+    startFq_(startFq),
+    endFq_(endFq),
+    chWidth_(chWidth),
+    samplingT_(samplingT),
+    cacheValid_(false)
+{
+    loadFromIntegerData(data16);
+    cachedMedians_.resize(numChannels_, 0.0f);
+}
 
 // Compute median of a channel's data
 // If cache is valid, return cached value
