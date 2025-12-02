@@ -3,17 +3,20 @@
 #include <vector>
 #include <cmath>
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
 
 TimeFrequency::TimeFrequency(
+    vector<float> spectra,
     unsigned numChannels,
     size_t numSpectra,
     unsigned startFq,
     unsigned endFq,
     float chWidth,
     double samplingT)
-    : numChannels_(numChannels),
+    : data_(std::move(spectra)),
+    numChannels_(numChannels),
     numSpectra_(numSpectra),
     startFq_(startFq),
     endFq_(endFq),
