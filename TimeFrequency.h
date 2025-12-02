@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <cstddef>
-
+#include <cstdint>
 
 /*
  * TimeFrequency:
@@ -13,18 +13,33 @@
 class TimeFrequency {
 public:
 
-    // Constructor: initializes the object with channel and spectra info
-    // numChannels: number of frequency channels per spectrum
-    // numSpectra: number of spectra per batch
-    // startFq, endFq: frequency range
-    // chWidth: channel width in Hz
-    // samplingT: sampling time interval
-	TimeFrequency(
+    // Constructor for float input data
+    TimeFrequency(
         std::vector<float> data,
-        unsigned numChannels, 
-        size_t numSpectra, 
-        unsigned startFq, 
-        unsigned endFq, 
+        unsigned numChannels,
+        size_t numSpectra,
+        unsigned startFq,
+        unsigned endFq,
+        float chWidth,
+        double samplingT);
+
+    // Constructor for 8-bit unsigned integer input data
+    TimeFrequency(
+        const std::vector<uint8_t>& data8,
+        unsigned numChannels,
+        size_t numSpectra,
+        unsigned startFq,
+        unsigned endFq,
+        float chWidth,
+        double samplingT);
+
+    // Constructor for 16-bit unsigned integer input data
+    TimeFrequency(
+        const std::vector<uint16_t>& data16,
+        unsigned numChannels,
+        size_t numSpectra,
+        unsigned startFq,
+        unsigned endFq,
         float chWidth,
         double samplingT);
 
@@ -56,6 +71,16 @@ public:
     void setCacheValid(bool valid); //Sets whether cached medians are used in computeChannelMedian
 
 private: 
+
+    // Helper for converting integer input data to float
+    template<typename T>
+    void loadFromIntegerData(const std::vector<T>& input) 
+    {
+        data_.resize(input.size());
+        for (size_t i = 0; i < input.size(); ++i){
+            data_[i] = static_cast<float>(input[i]);
+    }}
+
     std::vector<float> data_; // Data is stored in the class
     std::vector<float> cachedMedians_; //Stores cached medians per channel
     bool cacheValid_;
