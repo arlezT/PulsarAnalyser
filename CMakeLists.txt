@@ -17,7 +17,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Main executables
 add_executable(PulsarAnalyser
-    PulsarAnalyser.cpp
+    "main.cpp"
     TimeFrequency.cpp
     TimeFrequency.h
 )

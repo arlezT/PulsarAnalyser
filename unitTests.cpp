@@ -21,7 +21,7 @@ int main() {
         double stdDev = -1;
         double c = 1e-6;
         double expected = 2.756809750418044;
-        tf.computeStdDev(data, 5, median, stdDev, 0);
+        tf.computeStdDev(data, 5, median, stdDev);
         assert(std::fabs(stdDev - expected) < c);
     }
 
