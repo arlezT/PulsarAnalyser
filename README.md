@@ -31,4 +31,5 @@ The project uses CMake and can be built on both Linux and Windows.
 
 ## Running
 The program expects a binary input file named data.bin, placed in the same working directory as the executable.
+Run the built executable (`PulsarAnalyser` or `PulsarAnalyser.exe`) from your build output folder.
 
