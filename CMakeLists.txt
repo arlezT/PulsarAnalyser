@@ -1,6 +1,5 @@
-﻿# CMakeList.txt : CMake project for PulsarAnalyser, include source and define
-# project specific logic here.
-#
+﻿# CMakeList.txt : CMake project for PulsarAnalyser
+
 cmake_minimum_required (VERSION 3.10)
 
 # Enable Hot Reload for MSVC compilers if supported.
@@ -11,11 +10,21 @@ endif()
 
 project ("PulsarAnalyser")
 
-# Add source to this project's executable.
-add_executable (PulsarAnalyser "PulsarAnalyser.cpp" "PulsarAnalyser.h" "TimeFrequency.h")
+# Use C++11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET PulsarAnalyser PROPERTY CXX_STANDARD 20)
-endif()
+# Main executables
+add_executable(PulsarAnalyser
+    PulsarAnalyser.cpp
+    TimeFrequency.cpp
+    TimeFrequency.h
+)
 
-# TODO: Add tests and install targets if needed.
+# Test executable
+add_executable(UnitTests
+    UnitTests.cpp
+    TimeFrequency.cpp
+    TimeFrequency.h
+)
